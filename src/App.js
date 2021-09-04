@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import useStore from './store/DataLoader.jsx';
+
 import './App.css';
+import RestaurantDashboard from './components/RestaurantDashboard/RestaurantDashboard'
 
 function App() {
+  const currState = useStore(state => state);
+  const [currRestaurant, setCurrRestaurant] = useState('hookfish');
+
+  const change = function(e) {
+    setCurrRestaurant(e.target.value);
+    currState.setCurrRestaurant(e.target.value);
+  }
+  
+  useEffect(() => {
+    currState.loadGamineData();
+    currState.loadHookfishData();
+    currState.setCurrRestaurant('hookfish');
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <select id="restaurant" onChange={change} value={currRestaurant}>
+        <option value="hookfish">Hookfish</option>
+        <option value="gamine">Gamine</option>
+      </select>
+      <RestaurantDashboard />
+    </>
   );
 }
 
